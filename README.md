@@ -1,8 +1,12 @@
 # AS91896
 ## 📄 NCEA level 2 digital technologies - Standard 91896
 ### 🛠 - Installing Requirements:
-```python
+```bash
 pip install colorama>=0.4.6
+```
+### *or*
+```
+pip install -r requirements.txt
 ```
 <hr>
 
