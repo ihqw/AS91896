@@ -13,30 +13,36 @@ def view_data():
     try:
         with open(file_path, 'r') as f: # read the file 
             data = json.load(f)
+        print(Fore.GREEN + 'Successfully printed contacts.')
+
         for person in data:
-                print(f"{person['name']}: {', '.join(person['phone_numbers'])}") # print the details of all contacts
+                print(Fore.YELLOW + f"{person['name']}: {', '.join(person['phone_numbers'])}") # print the details of all contacts
         return data
+    
     except Exception as e:
-        print(f'Error Message: {e}') # print potential errors
+        print(Fore.RED + f'Error Message: {e}') # print potential errors
     return
 
 def get_valid_contact():
     while True:
-        name = input('Enter contacts name: ')
-        if not name:
-            print(Fore.RED + 'No input given.')
-            continue
+        try:
+            name = input('Enter contacts name: ')
+            if not name:
+                print(Fore.RED + 'No input given.')
+                continue
 
-        number = input('Enter contacts number: ').strip()
-        if not number:
-            print(Fore.RED + 'No input given.')
-            continue
+            number = input('Enter contacts number: ').strip()
+            if not number:
+                print(Fore.RED + 'No input given.')
+                continue
 
-        if not number.isdigit(): # check if number is actually a digit
-            print(Fore.RED + 'Please enter a proper number.')
-            continue
+            if not number.isdigit(): # check if number is actually a digit
+                print(Fore.RED + 'Please enter a proper number.')
+                continue
 
-        return name, number # return validated variables
+            return name, number # return validated variables
+        except Exception as e:
+            print(Fore.RED + f'Error message: {e}')
 
 def add_contact(name, number):
     if os.path.exists(file_path):
@@ -44,7 +50,7 @@ def add_contact(name, number):
             try:
                 contacts = json.load(f)
             except Exception as e:
-                print(f'error: {e}') # print error message
+                print(Fore.RED + f'error: {e}') # print error message
     else:
         contacts = []
 
@@ -54,17 +60,21 @@ def add_contact(name, number):
     })
 
     with open(file_path, 'w') as f: # writing new contact to data.json file
-        json.dump(contacts, f, indent=4)
+        json.dump(contacts, f, indent=4) # indent by 4 to follow good language conventions
 
 def search():
     while True:
-        user_input = input('Enter a name or number to search for: ').strip()
-        if not user_input:
-            print(Fore.RED + 'No input given.')
-            continue
-        break
+        try:
+            user_input = input('Enter a name or number to search for: ').strip()
+            if not user_input:
+                print(Fore.RED + 'No input given.') # red error for no user input
+                continue
+            break
+        except Exception as e:
+            print(Fore.RED + f'Error message: {e}') # print errors
+
     with open(file_path, 'r') as f:
-        data = json.load(f)
+        data = json.load(f) # load and only read json
 
     result = next((
         item for item in data
@@ -72,7 +82,7 @@ def search():
     ), None)
 
     if result:
-        print(Fore.GREEN + f"Contact found: {result}")
+        print(Fore.GREEN + f"Contact found: {result}") # print success
     else:
         print(Fore.RED + "No contact found with provided details.")
 
@@ -103,4 +113,4 @@ while True:
             print(Fore.RED + f'Unknown command: "{command}"')
 
     if not command:
-        print('No input given.') # prevent empty input
+        print(Fore.RED + 'No input given.') # prevent empty input
